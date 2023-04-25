@@ -258,7 +258,7 @@ class Task:
             Others.print_debug_log('Task.main')
             
             #輸入任務主項目代碼
-            _ = input('你正在任務系統\n\n1. 任務系統\nq. 退出功能\n\n')
+            _ = input('你正在清單系統\n\n1. 清單系統\n2. 重置清單資料\nq. 退出功能\n\n')
 
             #daily task
             if _ == '1':
@@ -272,7 +272,7 @@ class Task:
 
 
                     #輸入日常任務動作
-                    _ = input('指令:\n\t1 : 添加新任務\n\t2 : 勾選/取消勾選任務\n\t3 : 重製勾選\n\t4 : 刪除任務\n\tq : 退出功能\n\n')
+                    _ = input('指令:\n\t1 : 添加清單項目\n\t2 : 勾選/取消勾選清單\n\t3 : 重製勾選\n\t4 : 刪除清單項目\n\tq : 退出功能\n\n')
                                         
                     if _ == '1':
                         Task.daily.daily_task_add()
@@ -289,6 +289,13 @@ class Task:
                     elif _ == 'q':
                         break
 
+
+            elif _ == '2':
+                Others.clean_cmd()
+                _ = input('你確定要刪除所有清單資料？\n(y/n)\n\n')
+                if _ == 'y':
+                    Others.reset('task.pickle')
+                    input()
 
 
             #special task (wip)
@@ -307,7 +314,7 @@ class Task:
 
     class daily:
 
-        #列印已有的日常記事 (fin)
+        #列印已有的清單項目 (fin)
         def print_daily_task():
             
             try:
@@ -333,27 +340,27 @@ class Task:
                 daily_task_check_list = pickle.load(f)
 
             if daily_task_amount == int(0):
-                #沒有日常任務
+                #沒有清單項目
                 Others.clean_cmd()
-                print('你沒有任何任務\n\n')
+                print('你沒有任何清單項目\n\n')
                             
             else:
                 #有日常任務
                 Others.clean_cmd()
-                print('你共有' + str(daily_task_amount) + '個任務')
+                print('你共有' + str(daily_task_amount) + '個項目')
                 if daily_task_amount == None:
                     #日常任務數量 為 None (錯誤)
                     print('ERROR: daily_task_amount is nonetype\n\n')
                 else:
                     #日常任務正常 未完成
-                    print('未完成 :\n')
+                    print('未勾選 :\n')
                     for i in range(daily_task_amount):
                         if daily_task_check_list[i] == '1':
                             print(str(int(i)+1) + '. ' + str(daily_task_list[i]))
                     print('\n')
 
                     #日常任務正常 已完成
-                    print('已完成 :\n')
+                    print('已勾選 :\n')
                     for i in range(daily_task_amount):
                         if daily_task_check_list[i] == '2':
                             print(str(int(i)+1) + '. ' + str(daily_task_list[i]))
@@ -376,7 +383,7 @@ class Task:
                 Others.print_debug_log('Task.daily_task_add')
                 
                 #新增日常任務名字
-                _ = str(input('輸入新任務的名字\n輸入 \'q\' 來退出此模式\n\n') )    
+                _ = str(input('輸入新清單項目的名字\n輸入 \'q\' 來退出此模式\n\n') )    
 
                 #退出當前功能                   
                 if _ == 'q':
@@ -390,7 +397,7 @@ class Task:
                     Others.clean_cmd()
 
                     #日常任務編號指定
-                    _ = input('輸入任務的編號\n或者按下 enter 跳過\n\n')           
+                    _ = input('輸入清單項目的編號\n或者按下 enter 跳過\n\n')           
                     
 
                     #編號卡在中間
@@ -429,13 +436,13 @@ class Task:
 
             #檢查任務數量
             if daily_task_amount == int(0):
-                input("你沒有任何任務\n")
+                input("你沒有任何清單項目\n")
                 return
 
 
             while True:
                 Task.daily.print_daily_task()
-                _ = input('勾選/取消勾選任務\n輸入 \'q\' 來退出此模式\n\n')
+                _ = input('勾選/取消勾選\n輸入 \'q\' 來退出此模式\n\n')
 
                 #測試變數是否可以為數字
                 if _.isdigit():
@@ -447,7 +454,7 @@ class Task:
                             daily_task_check_list[int(_)-1] = '1'
                     else:
                         Others.clean_cmd()
-                        input('勾選失敗\n')
+                        input('勾選/取消勾選失敗\n')
 
                 elif _ == 'q':
                     break
@@ -466,7 +473,7 @@ class Task:
 
                 else:
                     Others.clean_cmd()
-                    input('勾選失敗\n')
+                    input('勾選/取消勾選失敗\n')
 
                 with open('task.pickle', 'wb') as f:
                     pickle.dump(daily_task_amount, f)
@@ -490,7 +497,7 @@ class Task:
             while True:
                 Others.clean_cmd()
                 Task.daily.print_daily_task()
-                _ = input('重置所有任務的勾選？ (y/n)\n')
+                _ = input('重置所有項目的勾選？ (y/n)\n')
 
                 if _ == 'y':
 
@@ -542,7 +549,7 @@ class Task:
                     
 
 
-                    _ = input('Which daily task do you want to delete\nType \'q\' to quit this function\n\n')
+                    _ = input('你想刪除哪個項目，輸入編號\n輸入 \'q\' 來退出此模式\n\n')
 
             
                     if _.isdigit():
@@ -583,6 +590,7 @@ class Task:
                         input('刪除失敗\n')
 
 
+        
             
 
 
@@ -597,7 +605,7 @@ class Task:
 
 while True:
     Others.clean_cmd()
-    _ = str(input('1. 加密/解密\n2. 任務系統\n3. 重置所有檔案\nq. 退出\n\n'))
+    _ = str(input('1. 加密/解密\n2. 清單系統\n3. 重置所有檔案\nq. 退出\n\n'))
 
     if _ == '1':
         EncodeAndDecode.main()
